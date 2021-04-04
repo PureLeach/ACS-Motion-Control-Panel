@@ -11,6 +11,28 @@ from acspy import acsc  # Библиотека управления контро
 class MainWindow(QObject):
     def __init__(self):
         QObject.__init__(self)
+        # Подключаемся к драйверу по COM порту
+        try:
+            self.hc = acsc.OpenCommSerial()  # Подключаемся к драйверу по COM порту
+            acsc.enable(self.hc, 0)  # Включаем ось 0
+            # Максимальный крутящий момент, приложенный к двигателю, который вызывает срабатывание механизма остановки
+            acsc.setJerk(self.hc, 0, 1000)
+            acsc.setAcceleration(self.hc, 0, 500)  # Максимальное ускорение
+            acsc.setDeceleration(self.hc, 0, 100)  # Максимальное замедление
+            self.flags = acsc.AMF_RELATIVE
+            print('Подключились к приводу')
+        except acsc.AcscError:
+            print('Ошибка подключения к драйверу сервопривода')
+            # raise acsc.AcscError('Ошибка подключения к драйверу сервопривода')
+
+        # Обработка ошибок
+        def my_excepthook(exctype, value, traceback):
+            sys.__excepthook__(exctype, value, traceback)
+            print('exctype = ', exctype)
+            print('value = ', value)
+            if str(value) == "name 'hc' is not defined":
+                print('Сервопривод не подключен')
+        sys.excepthook = my_excepthook
 
     # Инициализация привода
     @Slot()
@@ -18,6 +40,27 @@ class MainWindow(QObject):
         # Запускаем скрипт инициализации из 1 буфера флеша контроллера
         # acsc.runBuffer(hc, 1)
         print("Запуск инициализации привода")
+
+    @Slot()
+    def zero_position(self):
+        # acsc.runBuffer(hc, 20) # Set the drive to the zero position
+        print("Установка привода в положение нуля ")
+
+    @Slot(int, int)
+    def rotation(self, speed, angle):
+        # acsc.setVelocity(self.hc, 0, speed)
+        # # Поворот двигателя по часовой
+        # acsc.toPoint(self.hc, self.hc, 0, angle * -1)
+        # acsc.waitMotionEnd(self.hc, 0)  # Ждём конца остановки
+        print("Поворот двигателя по часовой")
+
+    @Slot(int, int)
+    def reverse_rotation(self, speed, angle):
+        # acsc.setVelocity(self.hc, 0, speed)
+        # # Поворот двигателя против часовой
+        # acsc.toPoint(self.hc, self.hc, 0, angle)
+        # acsc.waitMotionEnd(self.hc, 0)  # Ждём конца остановки
+        print("Поворот двигателя против часовой")
 
 
 if __name__ == "__main__":
@@ -29,9 +72,10 @@ if __name__ == "__main__":
     main = MainWindow()
     engine.rootContext().setContextProperty("backend", main)
     # Устанавливаем иконку
-    app.setWindowIcon(QIcon("icon.ico"))
+    app.setWindowIcon(QIcon("ico.ico"))
     # Загружаем файл qml в движок
     engine.load(os.path.join(os.path.dirname(__file__), "qml/main.qml"))
+
     if not engine.rootObjects():
         sys.exit(-1)
     sys.exit(app.exec_())
