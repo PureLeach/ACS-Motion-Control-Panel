@@ -34,36 +34,89 @@ ApplicationWindow{
         anchors{
             top: parent.top
             horizontalCenter: parent.horizontalCenter
-            margins: 20 // Отступ от края окна
+            margins: 20 
         }      
     }
+    // Ввод данных
+    Item {
+        id: editParameters
+        width: 200
+        height: 180
+        anchors{
+            top: image.bottom
+            horizontalCenter: parent.horizontalCenter
+        } 
+        // Ввод скорости 
+        TextField{
+            id: speedField
+            width: 150
+            text: qsTr("")
+            // Разрешаем ввод только чисел в диапазоне от 0 до 150
+            validator: IntValidator {bottom: 1; top: 150;}
+            // validator: RegularExpressionValidator { regularExpression: /^[0-9,/]+$/ }
+            selectByMouse: true
+            placeholderText: qsTr("Скорость, °/сек")
+            verticalAlignment: Text.AlignVCenter        
+            anchors.horizontalCenter: editParameters.horizontalCenter
+            anchors.top: editParameters.top
+            anchors.topMargin: 30  
+        }
+        // Ввод угла
+        TextField{
+            id: angleField
+            width: 150
+            text: qsTr("")
+            validator: IntValidator {bottom: 1; top: 99999999;}
+            selectByMouse: true
+            placeholderText: qsTr("Угол поворота, °")
+            verticalAlignment: Text.AlignVCenter        
+            anchors.horizontalCenter: editParameters.horizontalCenter
+            anchors.top: speedField.bottom
+        }
+        // Кнопка перезаписи параметров
+        Button {
+            id: buttonRewrite
+            text: qsTr("Перезаписать")
+            anchors.top: angleField.bottom
+            anchors.left: angleField.left
+            anchors.right: angleField.right
+            onClicked: {
+                        // console.log(speedField.text instanceof int)
+                    if(speedField.text > 0)
+                            {speed = speedField.text}
+                    if(angleField.text > 0)
+                            {angle = angleField.text}
+                        speedField.text = ""
+                        angleField.text = ""}
+            }
+    }    
+
 
     // Вывод параметров привода
-    Rectangle {
-            id: rectangleVisible
-            width: 250
+    Item {
+            id: viewParameters
+            width: 200
             height: 100
-            radius: 10
-            color: "#1d2128"
             anchors{
-                top: image.bottom
-                horizontalCenter: parent.horizontalCenter
-                margins: 60 // Отступ от края
+                top: editParameters.bottom
+                horizontalCenter: editParameters.horizontalCenter
+                topMargin: 5
             } 
             Label {
                 id: labelTextName
                 height: 25
                 color: "#55aaff"
                 text: qsTr("Параметры")
-                anchors.top: rectangleVisible.top
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: viewParameters.top
+                anchors.horizontalCenter: viewParameters.horizontalCenter
                 anchors.topMargin: 2
                 font.pointSize: 14
             }
             Text {
                 id: textSpeed
-                anchors.left: rectangleVisible.left
+                anchors.left: viewParameters.left
                 anchors.leftMargin: 5
+                anchors.topMargin: 5
                 anchors.top: labelTextName.bottom
                 color: "#a9b2c8"
                 text: "Скорость: " + speed + " °/с"
@@ -95,51 +148,6 @@ ApplicationWindow{
             }
         }
 
-
-    // Ввод скорости 
-    TextField{
-        id: speedField
-        width: 150
-        text: qsTr("")
-        // Разрешаем ввод только чисел в диапазоне от 0 до 150
-        validator: IntValidator {bottom: 1; top: 150;}
-        // validator: RegularExpressionValidator { regularExpression: /^[0-9,/]+$/ }
-        selectByMouse: true
-        placeholderText: qsTr("Скорость, °/сек")
-        // placeholderTextColor: "#EE202E"
-        verticalAlignment: Text.AlignVCenter        
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: rectangleVisible.bottom
-        anchors.topMargin: 30 // Отступ 
-    }
-    // Ввод угла
-    TextField{
-        id: angleField
-        width: 150
-        text: qsTr("")
-        validator: IntValidator {bottom: 1; top: 99999999;}
-        selectByMouse: true
-        placeholderText: qsTr("Угол поворота, °")
-        verticalAlignment: Text.AlignVCenter        
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: speedField.bottom
-    }
-    // Кнопка перезаписи параметров
-    Button {
-        id: buttonRewrite
-        text: qsTr("Перезаписать")
-        anchors.top: angleField.bottom
-        anchors.left: angleField.left
-        anchors.right: angleField.right
-        onClicked: {
-                    // console.log(speedField.text instanceof int)
-                   if(speedField.text > 0)
-                        {speed = speedField.text}
-                   if(angleField.text > 0)
-                        {angle = angleField.text}
-                    speedField.text = ""
-                    angleField.text = ""}
-        }
     // Кнопки управления приводом
     Rectangle {
         id: bottomMenu

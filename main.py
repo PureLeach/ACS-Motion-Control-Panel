@@ -36,13 +36,13 @@ class MainWindow(QObject):
     # Инициализация привода
     @Slot()
     def initialize(self):
-        # Запускаем скрипт инициализации из 1 буфера флеша контроллера
-        acsc.runBuffer(hc, 1)
+        # Запускаем скрипт инициализации из 1 буфера флеш контроллера
+        acsc.runBuffer(self.hc, 1)
         print("Запуск инициализации привода")
 
     @Slot()
     def zero_position(self):
-        acsc.runBuffer(hc, 20)  # Set the drive to the zero position
+        acsc.runBuffer(self.hc, 20)  # Set the drive to the zero position
         print("Установка привода в положение нуля ")
 
     # Поворот двигателя по часовой
@@ -52,7 +52,7 @@ class MainWindow(QObject):
         acsc.toPoint(self.hc, self.hc, 0, angle * -1)
         acsc.waitMotionEnd(self.hc, 0)  # Ждём конца остановки
         print(
-            f"Поворот двигателя по часовой на угол {angle} со скоросью {speed}")
+            f"Поворот двигателя по часовой на угол {angle} со скоростью {speed}")
 
     # Поворот двигателя против часовой
     @Slot(int, int)
@@ -61,7 +61,7 @@ class MainWindow(QObject):
         acsc.toPoint(self.hc, self.hc, 0, angle)
         acsc.waitMotionEnd(self.hc, 0)  # Ждём конца остановки
         print(
-            f"Поворот двигателя против часовой на угол {angle} со скоросью {speed}")
+            f"Поворот двигателя против часовой на угол {angle} со скоростью {speed}")
 
 
 if __name__ == "__main__":
@@ -73,7 +73,7 @@ if __name__ == "__main__":
     main = MainWindow()
     engine.rootContext().setContextProperty("backend", main)
     # Устанавливаем иконку
-    app.setWindowIcon(QIcon("ico.ico"))
+    app.setWindowIcon(QIcon("icon.ico"))
     # Загружаем файл qml в движок
     engine.load(os.path.join(os.path.dirname(__file__), "qml/main.qml"))
 
