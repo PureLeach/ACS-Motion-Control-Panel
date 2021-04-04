@@ -52,7 +52,8 @@ class MainWindow(QObject):
         # # Поворот двигателя по часовой
         # acsc.toPoint(self.hc, self.hc, 0, angle * -1)
         # acsc.waitMotionEnd(self.hc, 0)  # Ждём конца остановки
-        print("Поворот двигателя по часовой")
+        print(
+            f"Поворот двигателя по часовой на угол {angle} со скоросью {speed}")
 
     @Slot(int, int)
     def reverse_rotation(self, speed, angle):
@@ -60,7 +61,8 @@ class MainWindow(QObject):
         # # Поворот двигателя против часовой
         # acsc.toPoint(self.hc, self.hc, 0, angle)
         # acsc.waitMotionEnd(self.hc, 0)  # Ждём конца остановки
-        print("Поворот двигателя против часовой")
+        print(
+            f"Поворот двигателя против часовой на угол {angle} со скоросью {speed}")
 
 
 if __name__ == "__main__":
