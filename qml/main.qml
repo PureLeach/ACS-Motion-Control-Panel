@@ -59,7 +59,27 @@ ApplicationWindow{
             verticalAlignment: Text.AlignVCenter        
             anchors.horizontalCenter: editParameters.horizontalCenter
             anchors.top: editParameters.top
-            anchors.topMargin: 30  
+            anchors.topMargin: 30
+            Keys.onEnterPressed: { 
+            if(speedField.text > 0)
+                {speed = speedField.text;
+                speedField.text = "";
+                }  
+            if(angleField.text > 0)
+                {angle = angleField.text;
+                angleField.text = "";
+                }
+            }
+            Keys.onReturnPressed: { 
+            if(speedField.text > 0)
+                {speed = speedField.text;
+                speedField.text = "";
+                }  
+            if(angleField.text > 0)
+                {angle = angleField.text;
+                angleField.text = "";
+                }
+            }  
         }
         // Ввод угла
         TextField{
@@ -72,6 +92,26 @@ ApplicationWindow{
             verticalAlignment: Text.AlignVCenter        
             anchors.horizontalCenter: editParameters.horizontalCenter
             anchors.top: speedField.bottom
+            Keys.onEnterPressed: { 
+            if(speedField.text > 0)
+                {speed = speedField.text;
+                speedField.text = "";
+                }  
+            if(angleField.text > 0)
+                {angle = angleField.text;
+                angleField.text = "";
+                }
+            }
+            Keys.onReturnPressed: { 
+            if(speedField.text > 0)
+                {speed = speedField.text;
+                speedField.text = ""
+                }  
+            if(angleField.text > 0)
+                {angle = angleField.text;
+                angleField.text = ""
+                }
+            }
         }
         // Кнопка перезаписи параметров
         Button {
@@ -100,7 +140,7 @@ ApplicationWindow{
             anchors{
                 top: editParameters.bottom
                 horizontalCenter: editParameters.horizontalCenter
-                topMargin: 5
+                topMargin: 15
             } 
             Label {
                 id: labelTextName
@@ -149,7 +189,7 @@ ApplicationWindow{
         }
 
     // Кнопки управления приводом
-    Rectangle {
+    Item {
         id: bottomMenu
         width: 505
         anchors.horizontalCenter: parent.horizontalCenter
