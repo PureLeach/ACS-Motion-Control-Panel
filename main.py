@@ -23,7 +23,6 @@ class MainWindow(QObject):
             print('Подключились к приводу')
         except acsc.AcscError:
             print('Ошибка подключения к драйверу сервопривода')
-            # raise acsc.AcscError('Ошибка подключения к драйверу сервопривода')
 
         # Обработка ошибок
         def my_excepthook(exctype, value, traceback):
@@ -38,29 +37,29 @@ class MainWindow(QObject):
     @Slot()
     def initialize(self):
         # Запускаем скрипт инициализации из 1 буфера флеша контроллера
-        # acsc.runBuffer(hc, 1)
+        acsc.runBuffer(hc, 1)
         print("Запуск инициализации привода")
 
     @Slot()
     def zero_position(self):
-        # acsc.runBuffer(hc, 20) # Set the drive to the zero position
+        acsc.runBuffer(hc, 20)  # Set the drive to the zero position
         print("Установка привода в положение нуля ")
 
+    # Поворот двигателя по часовой
     @Slot(int, int)
     def rotation(self, speed, angle):
-        # acsc.setVelocity(self.hc, 0, speed)
-        # # Поворот двигателя по часовой
-        # acsc.toPoint(self.hc, self.hc, 0, angle * -1)
-        # acsc.waitMotionEnd(self.hc, 0)  # Ждём конца остановки
+        acsc.setVelocity(self.hc, 0, speed)
+        acsc.toPoint(self.hc, self.hc, 0, angle * -1)
+        acsc.waitMotionEnd(self.hc, 0)  # Ждём конца остановки
         print(
             f"Поворот двигателя по часовой на угол {angle} со скоросью {speed}")
 
+    # Поворот двигателя против часовой
     @Slot(int, int)
     def reverse_rotation(self, speed, angle):
-        # acsc.setVelocity(self.hc, 0, speed)
-        # # Поворот двигателя против часовой
-        # acsc.toPoint(self.hc, self.hc, 0, angle)
-        # acsc.waitMotionEnd(self.hc, 0)  # Ждём конца остановки
+        acsc.setVelocity(self.hc, 0, speed)
+        acsc.toPoint(self.hc, self.hc, 0, angle)
+        acsc.waitMotionEnd(self.hc, 0)  # Ждём конца остановки
         print(
             f"Поворот двигателя против часовой на угол {angle} со скоросью {speed}")
 
