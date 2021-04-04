@@ -28,8 +28,8 @@ ApplicationWindow{
     // Загружаем изображение
     Image{
         id: image 
-        width: 200
-        height: 100
+        width: 210
+        height: 69
         source: "../images/logo.png"  
         anchors{
             top: parent.top
@@ -140,7 +140,7 @@ ApplicationWindow{
             anchors{
                 top: editParameters.bottom
                 horizontalCenter: editParameters.horizontalCenter
-                topMargin: 15
+                topMargin: 30
             } 
             Label {
                 id: labelTextName
