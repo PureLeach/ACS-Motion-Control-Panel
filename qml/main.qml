@@ -198,33 +198,33 @@ ApplicationWindow{
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 50
             Button {
-            id: buttonInit
-            text: qsTr("Инициализация")
-            onClicked: backend.initialize()
+				id: buttonInit
+				text: qsTr("Инициализация")
+				onClicked: backend.initialize()
             }
             Button {
-            id: buttonZeroSet
-            text: qsTr("Установка нуля")
-            anchors.left: buttonInit.right
-            anchors.leftMargin: 5
-            anchors.top: buttonInit.top
-            onClicked: backend.zero_position()
+				id: buttonZeroSet
+				text: qsTr("Установка нуля")
+				anchors.left: buttonInit.right
+				anchors.leftMargin: 5
+				anchors.top: buttonInit.top
+				onClicked: backend.zero_position()
             }
             Button {
-            id: buttonRotation
-            text: qsTr("Поворот по часовой")
-            anchors.left: buttonZeroSet.right
-            anchors.leftMargin: 5
-            anchors.top: buttonInit.top
-            onClicked: backend.rotation(speed, angle)
+				id: buttonRotation
+				text: qsTr("Поворот по часовой")
+				anchors.left: buttonZeroSet.right
+				anchors.leftMargin: 5
+				anchors.top: buttonInit.top
+				onClicked: backend.rotation(speed, angle)
             }
             Button {
-            id: buttonRotationReverse
-            text: qsTr("Поворот против часовой")
-            anchors.left: buttonRotation.right
-            anchors.leftMargin: 5
-            anchors.top: buttonInit.top
-            onClicked: backend.reverse_rotation(speed, angle)
+				id: buttonRotationReverse
+				text: qsTr("Поворот против часовой")
+				anchors.left: buttonRotation.right
+				anchors.leftMargin: 5
+				anchors.top: buttonInit.top
+				onClicked: backend.reverse_rotation(speed, angle)
             }
     }    
 

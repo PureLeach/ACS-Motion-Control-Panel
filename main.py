@@ -29,7 +29,7 @@ class MainWindow(QObject):
             sys.__excepthook__(exctype, value, traceback)
             print('exctype = ', exctype)
             print('value = ', value)
-            if str(value) == "name 'hc' is not defined":
+            if str(value) == "name 'self.hc' is not defined":
                 print('Сервопривод не подключен')
         sys.excepthook = my_excepthook
 
@@ -49,19 +49,19 @@ class MainWindow(QObject):
     @Slot(int, int)
     def rotation(self, speed, angle):
         acsc.setVelocity(self.hc, 0, speed)
-        acsc.toPoint(self.hc, self.hc, 0, angle * -1)
-        acsc.waitMotionEnd(self.hc, 0)  # Ждём конца остановки
+        acsc.toPoint(self.hc, self.flags, 0, angle * -1)  # Поворот двигателя вперёд
         print(
             f"Поворот двигателя по часовой на угол {angle} со скоростью {speed}")
+
 
     # Поворот двигателя против часовой
     @Slot(int, int)
     def reverse_rotation(self, speed, angle):
         acsc.setVelocity(self.hc, 0, speed)
-        acsc.toPoint(self.hc, self.hc, 0, angle)
-        acsc.waitMotionEnd(self.hc, 0)  # Ждём конца остановки
+        acsc.toPoint(self.hc, self.flags, 0, angle)  # Поворот двигателя вперёд
         print(
             f"Поворот двигателя против часовой на угол {angle} со скоростью {speed}")
+
 
 
 if __name__ == "__main__":

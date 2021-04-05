@@ -1,4 +1,4 @@
 *.csv
+*.bat
 **/.vscode/
 **/.pylint.d/
-**/__pycache__/
