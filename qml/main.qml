@@ -51,7 +51,7 @@ ApplicationWindow{
             id: speedField
             width: 150
             text: qsTr("")
-            // Разрешаем ввод только чисел в диапазоне от 0 до 150
+            // Разрешаем ввод только чисел в диапазоне от 1 до 150
             validator: IntValidator {bottom: 1; top: 150;}
             // validator: RegularExpressionValidator { regularExpression: /^[0-9,/]+$/ }
             selectByMouse: true
@@ -61,24 +61,24 @@ ApplicationWindow{
             anchors.top: editParameters.top
             anchors.topMargin: 30
             Keys.onEnterPressed: { 
-            if(speedField.text > 0)
-                {speed = speedField.text;
-                speedField.text = "";
-                }  
-            if(angleField.text > 0)
-                {angle = angleField.text;
-                angleField.text = "";
-                }
+                if(speedField.text > 0)
+                    {speed = speedField.text;
+                    speedField.text = "";
+                    }  
+                if(angleField.text > 0)
+                    {angle = angleField.text;
+                    angleField.text = "";
+                    }
             }
             Keys.onReturnPressed: { 
-            if(speedField.text > 0)
-                {speed = speedField.text;
-                speedField.text = "";
-                }  
-            if(angleField.text > 0)
-                {angle = angleField.text;
-                angleField.text = "";
-                }
+                if(speedField.text > 0)
+                    {speed = speedField.text;
+                    speedField.text = "";
+                    }  
+                if(angleField.text > 0)
+                    {angle = angleField.text;
+                    angleField.text = "";
+                    }
             }  
         }
         // Ввод угла
@@ -86,7 +86,7 @@ ApplicationWindow{
             id: angleField
             width: 150
             text: qsTr("")
-            validator: IntValidator {bottom: 1; top: 99999999;}
+            validator: IntValidator {bottom: 1; top: 100000000;}
             selectByMouse: true
             placeholderText: qsTr("Угол поворота, °")
             verticalAlignment: Text.AlignVCenter        
@@ -120,14 +120,16 @@ ApplicationWindow{
             anchors.top: angleField.bottom
             anchors.left: angleField.left
             anchors.right: angleField.right
-            onClicked: {
-                        // console.log(speedField.text instanceof int)
-                    if(speedField.text > 0)
-                            {speed = speedField.text}
-                    if(angleField.text > 0)
-                            {angle = angleField.text}
-                        speedField.text = ""
-                        angleField.text = ""}
+            onClicked:{
+                if(speedField.text > 0)
+                    {speed = speedField.text;
+                    speedField.text = "";
+                    }  
+                if(angleField.text > 0)
+                    {angle = angleField.text;
+                    angleField.text = "";
+                    }
+                }
             }
     }    
 
