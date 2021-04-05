@@ -1,0 +1,4 @@
+*.csv
+**/.vscode/
+**/.pylint.d/
+**/__pycache__/
