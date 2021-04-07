@@ -1,5 +1,6 @@
 import sys
 import os
+import time
 
 from PySide6.QtGui import QGuiApplication, QIcon
 from PySide6.QtQml import QQmlApplicationEngine
@@ -48,6 +49,9 @@ class MainWindow(QObject):
     # Поворот двигателя по часовой
     @Slot(int, int)
     def rotation(self, speed, angle):
+        if not acsc.getMotorEnabled(self.hc, 0): #Если ось отключена, то включаем её
+            acsc.enable(self.hc, 0)  # Включаем ось 0
+            time.sleep(0.3)
         acsc.setVelocity(self.hc, 0, speed)
         acsc.toPoint(self.hc, self.flags, 0, angle * -1)  # Поворот двигателя вперёд
         print(
@@ -57,12 +61,19 @@ class MainWindow(QObject):
     # Поворот двигателя против часовой
     @Slot(int, int)
     def reverse_rotation(self, speed, angle):
+        if not acsc.getMotorEnabled(self.hc, 0): #Если ось отключена, то включаем её
+            acsc.enable(self.hc, 0)  # Включаем ось 0
+            time.sleep(0.3)
         acsc.setVelocity(self.hc, 0, speed)
         acsc.toPoint(self.hc, self.flags, 0, angle)  # Поворот двигателя вперёд
         print(
             f"Поворот двигателя против часовой на угол {angle} со скоростью {speed}")
 
-
+    # Остановить двигатель
+    @Slot()
+    def stop_rotation(self):
+        acsc.disable(self.hc, 0)     # Отключаем ось
+        print("Двигатель остановлен")
 
 if __name__ == "__main__":
     # Создаём экземпляр приложения

@@ -6,9 +6,9 @@ import QtQuick.Layouts 1.0
 
 ApplicationWindow{
     id: window 
-    width: 520
+    width: 590
     height: 500
-    minimumWidth: 520  
+    minimumWidth: 590  
     minimumHeight: 500  
     visible: true
     title: qsTr("ACS Motion Control Panel")
@@ -193,10 +193,11 @@ ApplicationWindow{
     // Кнопки управления приводом
     Item {
         id: bottomMenu
-        width: 505
+        width: 580
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 50
+		
             Button {
 				id: buttonInit
 				text: qsTr("Инициализация")
@@ -225,6 +226,14 @@ ApplicationWindow{
 				anchors.leftMargin: 5
 				anchors.top: buttonInit.top
 				onClicked: backend.reverse_rotation(speed, angle)
+            }
+			Button {
+				id: buttonStop
+				text: qsTr("Стоп")
+				anchors.left: buttonRotationReverse.right
+				anchors.leftMargin: 5
+				anchors.top: buttonInit.top
+				onClicked: backend.stop_rotation()
             }
     }    
 
