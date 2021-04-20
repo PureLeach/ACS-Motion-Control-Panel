@@ -47,21 +47,23 @@ class MainWindow(QObject):
         print("Установка привода в положение нуля ")
 
     # Поворот двигателя по часовой
-    @Slot(int, int)
+    @Slot(float, int)
     def rotation(self, speed, angle):
-        if not acsc.getMotorEnabled(self.hc, 0): #Если ось отключена, то включаем её
+        # Если ось отключена, то включаем её
+        if not acsc.getMotorEnabled(self.hc, 0):
             acsc.enable(self.hc, 0)  # Включаем ось 0
             time.sleep(0.3)
         acsc.setVelocity(self.hc, 0, speed)
-        acsc.toPoint(self.hc, self.flags, 0, angle * -1)  # Поворот двигателя вперёд
+        # Поворот двигателя вперёд
+        acsc.toPoint(self.hc, self.flags, 0, angle * -1)
         print(
             f"Поворот двигателя по часовой на угол {angle} со скоростью {speed}")
 
-
     # Поворот двигателя против часовой
-    @Slot(int, int)
+    @Slot(float, int)
     def reverse_rotation(self, speed, angle):
-        if not acsc.getMotorEnabled(self.hc, 0): #Если ось отключена, то включаем её
+        # Если ось отключена, то включаем её
+        if not acsc.getMotorEnabled(self.hc, 0):
             acsc.enable(self.hc, 0)  # Включаем ось 0
             time.sleep(0.3)
         acsc.setVelocity(self.hc, 0, speed)
@@ -74,6 +76,7 @@ class MainWindow(QObject):
     def stop_rotation(self):
         acsc.disable(self.hc, 0)     # Отключаем ось
         print("Двигатель остановлен")
+
 
 if __name__ == "__main__":
     # Создаём экземпляр приложения

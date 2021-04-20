@@ -19,11 +19,22 @@ ApplicationWindow{
     Material.accent: Material.color(Material.Red)
 
     // Объявляем переменные и задаём начальные значения
-    property int speed: 15
+    property real speed: 15
     property int angle: 360
     property int acceleration: 500
     property int deceleration: 100
+    property real rotation_time: angle/speed  // Время таймера
+    property bool timerFlag: false // Триггер таймера
+    // При обновлении значений будет обновляться время таймера
+    onAngleChanged: rotation_time = angle/speed 
+    onSpeedChanged: rotation_time = angle/speed
 
+
+    // Вывод таймера
+    RotationTimer {
+        anchors.top: parent.top
+        anchors.right: parent.right
+    }
 
     // Загружаем изображение
     Image{
@@ -51,9 +62,8 @@ ApplicationWindow{
             id: speedField
             width: 150
             text: qsTr("")
-            // Разрешаем ввод только чисел в диапазоне от 1 до 150
-            validator: IntValidator {bottom: 1; top: 150;}
-            // validator: RegularExpressionValidator { regularExpression: /^[0-9,/]+$/ }
+            // Разрешаем ввод только чисел и точки
+            validator: RegularExpressionValidator { regularExpression: /^[0-9.]+$/ }
             selectByMouse: true
             placeholderText: qsTr("Скорость, °/сек")
             verticalAlignment: Text.AlignVCenter        
@@ -217,7 +227,11 @@ ApplicationWindow{
 				anchors.left: buttonZeroSet.right
 				anchors.leftMargin: 5
 				anchors.top: buttonInit.top
-				onClicked: backend.rotation(speed, angle)
+				onClicked: {
+                    rotation_time = angle/speed // Востанавливаем значение таймера при повторном нажатии
+                    timerFlag = true // Включаем таймер
+                    backend.rotation(speed, angle);
+                    }
             }
             Button {
 				id: buttonRotationReverse
@@ -225,15 +239,23 @@ ApplicationWindow{
 				anchors.left: buttonRotation.right
 				anchors.leftMargin: 5
 				anchors.top: buttonInit.top
-				onClicked: backend.reverse_rotation(speed, angle)
-            }
+				onClicked: {
+                    rotation_time = angle/speed
+                    timerFlag = true
+                    backend.reverse_rotation(speed, angle)
+                    }
+				}
 			Button {
 				id: buttonStop
 				text: qsTr("Стоп")
 				anchors.left: buttonRotationReverse.right
 				anchors.leftMargin: 5
 				anchors.top: buttonInit.top
-				onClicked: backend.stop_rotation()
+				onClicked: {
+                    timerFlag = false // Останавливаем таймер
+                    rotation_time = angle/speed // Востанавлваем значение
+                    backend.stop_rotation()
+                    }
             }
     }    
 
