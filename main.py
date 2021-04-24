@@ -14,7 +14,7 @@ class MainWindow(QObject):
         QObject.__init__(self)
         # Подключаемся к драйверу по COM порту
         try:
-            self.hc = acsc.OpenCommSerial()  # Подключаемся к драйверу по COM порту
+            self.hc = acsc.OpenCommSerial()
             acsc.enable(self.hc, 0)  # Включаем ось 0
             # Максимальный крутящий момент, приложенный к двигателю, который вызывает срабатывание механизма остановки
             acsc.setJerk(self.hc, 0, 1000)
