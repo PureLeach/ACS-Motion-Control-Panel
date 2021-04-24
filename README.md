@@ -5,6 +5,3 @@ GUI для управления драйвером ACS Motion Control. Прог�
 #
 
 GUI for controlling the ACS Motion Control driver. The program is developed using PySide 6 and the QML language. To control the servo driver, use the edited library [ACSpy](https://github.com/petebachant/ACSpy).
-
-
-![image_1](https://raw.githubusercontent.com/barannikovMU/ACS-Motion-Control-Panel/main/images/screenshot.png)
