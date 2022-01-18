@@ -221,7 +221,7 @@ ApplicationWindow {
         Button {
             id: buttonInit
             text: qsTr("Инициализация")
-            onClicked: backend.initialize()
+            onClicked: backend.initializing_drive()
         }
 
         Button {

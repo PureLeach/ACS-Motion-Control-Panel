@@ -6,89 +6,103 @@ from PySide6.QtGui import QGuiApplication, QIcon
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtCore import QObject, Slot, Signal
 
-from acspy import acsc  # Библиотека управления контроллером сервопривода
+from acspy import acsc
 
 
 class MainWindow(QObject):
     def __init__(self):
         QObject.__init__(self)
-        # Подключаемся к драйверу по COM порту
+        # Connect to the driver via COM port
         try:
-            self.hc = acsc.OpenCommSerial()
-            acsc.enable(self.hc, 0)  # Включаем ось 0
-            # Максимальный крутящий момент, приложенный к двигателю, который вызывает срабатывание механизма остановки
+            self.hc: object = acsc.OpenCommSerial()
+            # Activating axis 0
+            acsc.enable(self.hc, 0)
+            # Maximum torque applied to the motor that triggers the stopping mechanism
             acsc.setJerk(self.hc, 0, 1000)
-            acsc.setAcceleration(self.hc, 0, 500)  # Максимальное ускорение
-            acsc.setDeceleration(self.hc, 0, 100)  # Максимальное замедление
-            self.flags = acsc.AMF_RELATIVE
-            print('Подключились к приводу')
-        except acsc.AcscError:
-            print('Ошибка подключения к драйверу сервопривода')
+            acsc.setAcceleration(self.hc, 0, 500)
+            acsc.setDeceleration(self.hc, 0, 100)
+            self.flags: int = acsc.AMF_RELATIVE
+        except acsc.AcscError as e:
+            print(f"Connection error to the servo driver: {e}")
 
-        # Обработка ошибок
+        # Error Handling
         def my_excepthook(exctype, value, traceback):
             sys.__excepthook__(exctype, value, traceback)
-            print('exctype = ', exctype)
-            print('value = ', value)
+            print("exctype = ", exctype)
+            print("value = ", value)
             if str(value) == "name 'self.hc' is not defined":
-                print('Сервопривод не подключен')
+                print("The servo is not connected")
+
         sys.excepthook = my_excepthook
 
-    # Инициализация привода
     @Slot()
-    def initialize(self):
-        # Запускаем скрипт инициализации из 1 буфера флеш контроллера
+    def initializing_drive(self):
+        # Run the initialization script from 1 buffer of the flash controller
         acsc.runBuffer(self.hc, 1)
-        print("Запуск инициализации привода")
+        print("Starting drive initialization")
 
     @Slot()
     def zero_position(self):
-        acsc.runBuffer(self.hc, 20)  # Set the drive to the zero position
-        print("Установка привода в положение нуля ")
+        # Set the drive to the zero position
+        acsc.runBuffer(self.hc, 20)
+        print("Setting the drive to the zero position")
 
-    # Поворот двигателя по часовой
     @Slot(float, int)
-    def rotation(self, speed, angle):
-        # Если ось отключена, то включаем её
+    def rotation(self, speed: float, angle: int):
+        """Turning the engine clockwise
+
+        Args:
+            speed (float): Turning speed
+            angle (int): Turning angle
+        """
+        # If the axis is disabled, then turn it on
         if not acsc.getMotorEnabled(self.hc, 0):
-            acsc.enable(self.hc, 0)  # Включаем ось 0
+            # Activating axis 0
+            acsc.enable(self.hc, 0)
             time.sleep(0.3)
         acsc.setVelocity(self.hc, 0, speed)
-        # Поворот двигателя вперёд
         acsc.toPoint(self.hc, self.flags, 0, angle * -1)
         print(
-            f"Поворот двигателя по часовой на угол {angle} со скоростью {speed}")
+            f"Turning the motor counterclockwise by an angle {angle} with speed {speed}"
+        )
 
-    # Поворот двигателя против часовой
     @Slot(float, int)
-    def reverse_rotation(self, speed, angle):
-        # Если ось отключена, то включаем её
+    def reverse_rotation(self, speed: float, angle: int):
+        """Turning the engine counterclockwise
+
+        Args:
+            speed (float): Turning speed
+            angle (int): Turning angle
+        """
+        # If the axis is disabled, then turn it on
         if not acsc.getMotorEnabled(self.hc, 0):
-            acsc.enable(self.hc, 0)  # Включаем ось 0
+            # Activating axis 0
+            acsc.enable(self.hc, 0)
             time.sleep(0.3)
         acsc.setVelocity(self.hc, 0, speed)
-        acsc.toPoint(self.hc, self.flags, 0, angle)  # Поворот двигателя вперёд
+        acsc.toPoint(self.hc, self.flags, 0, angle)
         print(
-            f"Поворот двигателя против часовой на угол {angle} со скоростью {speed}")
+            f"Turning the motor counterclockwise by an angle {angle} with speed {speed}"
+        )
 
-    # Остановить двигатель
     @Slot()
     def stop_rotation(self):
-        acsc.disable(self.hc, 0)     # Отключаем ось
-        print("Двигатель остановлен")
+        # Disabling the axis
+        acsc.disable(self.hc, 0)
+        print("The engine is stopped")
 
 
 if __name__ == "__main__":
-    # Создаём экземпляр приложения
+    # Creating an application instance
     app = QGuiApplication(sys.argv)
-    # Создаём QML движок
+    # Creating a QML engine
     engine = QQmlApplicationEngine()
-    # Создаём класс окна
+    # Create a window class
     main = MainWindow()
     engine.rootContext().setContextProperty("backend", main)
-    # Устанавливаем иконку
+    # Installing the icon
     app.setWindowIcon(QIcon("icon.ico"))
-    # Загружаем файл qml в движок
+    # Load the QML file into the engine
     engine.load(os.path.join(os.path.dirname(__file__), "qml/main.qml"))
 
     if not engine.rootObjects():
